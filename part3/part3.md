@@ -14,7 +14,7 @@ Denne antar at du er i samme mappe som Dockerfile. Siste argument er path til ma
 
 `podman run -d -p 5432:5432 todo`
 
-Gi containeren et navn, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
+Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
 
 `podman ps`
 
