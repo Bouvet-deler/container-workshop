@@ -4,7 +4,7 @@
   let data: string;
 
   onMount(async () => {
-    const resp = await fetch('/api/db');
+    const resp = await fetch('/api/todo');
     console.log(resp);
     data = await resp.json();
   });
