@@ -42,6 +42,16 @@ Note the absence of the -p flag. We do not need to expose the port of the contai
 
 ## 4.5 Configuring the Front-End to use the Back-end
 
+Now that the front and the back-end are up and running, we need to work on making them communicate.
+
+We will take advantage of SvelteKit to act as an API for the DB (not recommended in production)
+
+### Documentation
+
+SvelteKit routing (+server) https://kit.svelte.dev/docs/routing#server
+
+SvelteKit server side modules: https://kit.svelte.dev/docs/server-only-modules
+
 ## 4.6 Creating a network for the BE and FE to communicate
 
 # Utilities
@@ -53,3 +63,10 @@ Note the absence of the -p flag. We do not need to expose the port of the contai
 ### Remove all images
 
 `podman rmi --force $(podman images --quiet)`
+
+# Future work
+
+- Keep creating the TODO app!
+- Placeholder or loading screen while the app is loading
+- Error handling
+- Add type safety between the front-end and the back-end?
