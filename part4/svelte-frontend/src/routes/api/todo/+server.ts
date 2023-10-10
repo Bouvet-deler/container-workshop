@@ -2,8 +2,12 @@ import pgPromise from 'pg-promise';
 
 const pgp = pgPromise({});
 
+// We can also input the host as a variable from podman
+const host = process.env["HOST"]
+
 const db = pgp({
-  host: 'localhost',
+  // host: "localhost",
+  host: host,
   port: 5432,
   database: 'todo',
   user: 'postgres',
