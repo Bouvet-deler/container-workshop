@@ -2,7 +2,7 @@
 # Build docker image for building eample app from github
  podman build --no-cache -t stenbror/dotnetbuild .
 
-# Executing image as interactive shekk ( Bash )
+# Executing image as interactive shell ( Bash )
  podman run --rm -it --privileged -v "$(PWD):/home/app" stenbror/dotnetbuild:latest bash
 
 
