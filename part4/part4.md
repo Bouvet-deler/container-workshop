@@ -13,6 +13,9 @@ podman build . -t nameOfImage:latest
 . : the path to the Dockerfile (we assume your current working directory is the root of the project (svelte-frontend/.))
 
 nameOfImage:latest : the name and tag of the image (latest is the default tag if not specified) (run 'podman images' to see the list of images on your system)
+"svelte" is recommended to keep track
+
+Take note of .dockerignore in the svelte-frontend directory. This file is used to exclude files and directories from the build context. This is useful to avoid sending unnecessary files to the build context and thus speeding up the build process.
 
 Take note of .dockerignore in the svelte-frontend directory. This file is used to exclude files and directories from the build context. This is useful to avoid sending unnecessary files to the build context and thus speeding up the build process.
 
@@ -80,7 +83,7 @@ import { onMount } from 'svelte';
 let data: string;
 
 onMount(async () => {
-  const resp = await fetch('/api/db');
+  const resp = await fetch('/api/todo');
   console.log(resp);
   data = await resp.json();
 });
