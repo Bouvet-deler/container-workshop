@@ -1,0 +1,32 @@
+Workshop, part 2
+
+Steps:
+
+installere podman
+
+Podman machine init
+Podman machine start
+
+Last ned repo
+
+Gå til riktig mappe, mappen med dockerfile
+
+se på Dockerfile
+
+podman build . -t=tagName
+
+podman images (se på images)
+
+podman run -p 5000:80 localhost/firstappimage (name of image given in tag)
+
+ctr-c for å stanse containeren som kjører.
+
+gå til index.cshtml og endre noe
+
+podman build . -tagName (med samme tagName for å oppdatere imaget)
+
+podman run -p 5000:80 localhost/tagName
+
+podman ps
+
+podman rm containerId -f

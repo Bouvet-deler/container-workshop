@@ -2,7 +2,7 @@
 
 ## 4.1 Building the FE application
 
-Make sure you are in the right directory /part4/svelte-frontend
+Make sure you are in the right directory /part4/svelte-frontend.
 
 ```bash
 podman build . -t nameOfImage:latest
@@ -97,7 +97,7 @@ SvelteKit routing (+server) https://kit.svelte.dev/docs/routing#server
 
 SvelteKit server side modules: https://kit.svelte.dev/docs/server-only-modules
 
-## 4.6 Creating a network for the BE and FE to communicate
+## 4.6 Creating a network for the DB and application to communicate
 
 ```bash
 podman network create todo
@@ -162,7 +162,7 @@ Use "podman inspect CONTAINERID/NAME" to get detailed information on a running c
 - Keep creating the TODO app!
 - Scale up! Run multiple instances of the application and put them behind a load balancer
 - Placeholder or loading screen while the app is loading from DB?
-- Error handling? 
+- Error handling?
 - Add type safety between the front-end and the back-end?
 - Add a volume to the DB container to persist data
 - Add a volume to the FE container to persist data
