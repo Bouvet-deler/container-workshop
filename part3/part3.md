@@ -23,3 +23,9 @@ Få shell access i en kjørende container
 `podman exec -it <navn/hash> /bin/bash`
 
 !NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
+
+`psql -U postgres -d todo`
+
+`select * from todo;`
+
+MERK `;`
