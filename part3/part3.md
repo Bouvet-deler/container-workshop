@@ -1,16 +1,41 @@
 # Database i container
 
+I denne seksjonen skal vi lære hvordan vi kjører en database i en container. Dette er et typisk bruksområdet for containerteknologi fordi det gjør det enkelt å spinne opp en versjon av prod databasen lokalt. 
+
 Vi bruker PostgreSQL som eksempel. Dette er en mye brukt og moden FOSS (Free and Open Source Software) database.
 
-## Nyttige kommandoer
+## Oppgave
 
-For å få shell inn i en kjørende container med postgres
+1. Bygg en Postgres container 
+2. Opprett shell aksess 
+3. Utfør noen SQL kommandoer mot databasen
+
+### Bygg databasen
+Bytt til mappa med Dockerfile
+
+`cd part3`
+
+Bygg Postgres image med tag: todo
+
+`podman build -t todo .`
+
+### Opprett shell aksess
+
+Kunne her brukt `podman run` for å starte image'et også `podman exec -it` for å få shell aksess, men vi kan også gjøre dette i samme kommando.
 
 `podman run -it -e POSTGRES_PASSWORD=pass postgres /bin/bash`
 
-Denne antar at du er i samme mappe som Dockerfile. Siste argument er path til mappa med Dockerfile, eller så kan du gi Dockerfile-ene navn og angi path med -f flagget.
+### Utfør SQL kommandoer
 
-`podman build -t todo .`
+Logg på databasen med psql, et management verktøy som følger med Postgres.
+
+`psql -U postgres -d todo`
+
+Kjør SQL spørringer, f.eks.
+
+`select * from todo;`
+
+## Nyttige kommandoer
 
 `podman run -d -p 5432:5432 todo`
 
@@ -23,9 +48,3 @@ Få shell access i en kjørende container
 `podman exec -it <navn/hash> /bin/bash`
 
 !NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
-
-`psql -U postgres -d todo`
-
-`select * from todo;`
-
-MERK `;`
