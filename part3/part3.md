@@ -2,7 +2,11 @@
 
 I denne seksjonen skal vi lære hvordan vi kjører en database i en container. Dette er et typisk bruksområdet for containerteknologi fordi det gjør det enkelt å spinne opp en versjon av prod databasen lokalt. 
 
-Vi bruker PostgreSQL som eksempel. Dette er en mye brukt og moden FOSS (Free and Open Source Software) database.
+Vi bruker PostgreSQL som eksempel. Dette er en mye brukt FOSS (Free and Open Source Software) database.
+
+For å bygge Postgres bruker vi en enkel Dockerfile. Den henter det offisielle Postgres image'et fra Docker Hub, setter passord og navn på databasen, kopierer inn et lite init skript, også eksponerer porten Postgres kommuniserer over.
+
+Init skriptet lager en enkel tabell for å lagre todos og setter inn én rad.
 
 ## Oppgave
 
