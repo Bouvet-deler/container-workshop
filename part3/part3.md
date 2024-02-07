@@ -15,7 +15,7 @@ Init skriptet lager en enkel tabell for å lagre todos og setter inn én rad.
 3. Utfør noen SQL kommandoer mot databasen
 
 ### Bygg databasen
-Bytt til mappa med Dockerfile
+Bytt til mappa med Dockerfile'en i
 
 `cd part3`
 
