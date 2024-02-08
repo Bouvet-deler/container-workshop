@@ -1,4 +1,4 @@
-# Database i container
+# Part 3: Database i container
 
 I denne seksjonen skal vi lære hvordan vi kjører en database i en container. Dette er et typisk bruksområdet for containerteknologi fordi det gjør det enkelt å spinne opp en versjon av prod databasen lokalt. 
 
