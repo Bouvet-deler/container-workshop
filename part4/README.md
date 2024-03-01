@@ -36,14 +36,14 @@ See part 3
 ## 4.4 Running the BE application
 
 ```bash
-podman run -d -p 5432:5432 postgres
+podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 todo
 ```
 
 ## 4.5 Configuring the Front-End to use the Back-end
 
 We recommend using "npm run dev" command to start the application in development mode. This will start a development server that will automatically reload the application when changes are made. This will make it easier to test and debug our changes.
 
-Now that the front and the back-end are up and running, we need to work on making them communicate.
+Now that the front- and back-end are up and running, we need to work on making them communicate.
 
 We will take advantage of SvelteKit to act as an API for the DB (not recommended in production)
 
@@ -135,7 +135,7 @@ podman run --network todo --name postgres -d postgres
 podman run --network todo --name svelte -d -p 5000:5000 -e HOST=postgres svelte
 ```
 
-🥳
+Fin; 🥳
 
 ### Documentation
 
