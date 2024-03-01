@@ -2,7 +2,7 @@
 
 ## 4.1 Building the FE application
 
-Make sure you are in the right directory /part4/svelte-frontend.
+Make sure you are in the right directory /part4/svelte-frontend. See the Dockerfile for the build instructions.
 
 ```bash
 podman build . -t nameOfImage:latest
@@ -14,8 +14,6 @@ podman build . -t nameOfImage:latest
 
 nameOfImage:latest : the name and tag of the image (latest is the default tag if not specified) (run 'podman images' to see the list of images on your system)
 "svelte" is recommended to keep track
-
-Take note of .dockerignore in the svelte-frontend directory. This file is used to exclude files and directories from the build context. This is useful to avoid sending unnecessary files to the build context and thus speeding up the build process.
 
 Take note of .dockerignore in the svelte-frontend directory. This file is used to exclude files and directories from the build context. This is useful to avoid sending unnecessary files to the build context and thus speeding up the build process.
 
@@ -37,13 +35,13 @@ See part 3
 
 ## 4.4 Running the BE application
 
-See part 3
-
 ```bash
 podman run -d -p 5432:5432 postgres
 ```
 
 ## 4.5 Configuring the Front-End to use the Back-end
+
+We recommend using "npm run dev" command to start the application in development mode. This will start a development server that will automatically reload the application when changes are made. This will make it easier to test and debug our changes.
 
 Now that the front and the back-end are up and running, we need to work on making them communicate.
 
@@ -159,7 +157,7 @@ Use "podman inspect CONTAINERID/NAME" to get detailed information on a running c
 
 # Future work
 
-- Keep creating the TODO app!
+- Keep creating the TODO app! Add the ability to add, delete and update todos, display the todos in a better fashion, etc..
 - Scale up! Run multiple instances of the application and put them behind a load balancer
 - Placeholder or loading screen while the app is loading from DB?
 - Error handling?
