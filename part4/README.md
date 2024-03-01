@@ -41,13 +41,28 @@ podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 todo
 
 ## 4.5 Configuring the Front-End to use the Back-end
 
-We recommend using "npm run dev" command to start the application in development mode. This will start a development server that will automatically reload the application when changes are made. This will make it easier to test and debug our changes.
+We recommend using "npm run dev" (requires having ran "npm install" first) command to start the application in development mode. This will start a development server that will automatically reload the application when changes are made. This will make it easier to test and debug our changes.
 
 Now that the front- and back-end are up and running, we need to work on making them communicate.
 
-We will take advantage of SvelteKit to act as an API for the DB (not recommended in production)
+First we will complete the Svelte application by adding a way to fetch data from the database. The suggested approach is to run the front end application locally, with an PostgreSQL instance running in a container. We will take advantage of SvelteKit's server-side rendering to fetch data from the database and display it in the front end.
 
-Create a new file /routes/api/todo/+server.ts
+First we will create a new route where we can display our todos. Create a new file called /routes/todo/+page.svelte and add the following code:
+
+```html
+<script lang="ts">
+  import type { LoadReturnType } from './+page.server';
+
+  export let data: LoadReturnType;
+</script>
+
+<h1>Todo</h1>
+
+<!-- Will display data from the database -->
+<pre>{JSON.stringify(data, null, 2)}</pre>
+```
+
+We will also create a new file /routes/todo/+page.server.ts
 
 ```typescript
 import pgPromise from 'pg-promise';
@@ -62,32 +77,33 @@ const db = pgp({
   password: 'pass',
 });
 
-export const GET = async () => {
+// Will run to finish before the page is rendered for the user
+export async function load() {
   try {
-    const data = await db.any('SELECT * FROM todo');
-    return new Response(JSON.stringify(data));
+    const data = (await db.any('SELECT * FROM todo ORDER BY id')) as Todo[];
+
+    // Returns must be of type object, we can either spread the result or put it in an object
+    return { data };
   } catch (error) {
     console.error('ERROR:', error);
-    return { status: 500, body: { error: 'Database query failed' } };
+    return { errorMsg: 'Something went wrong when fetching from database' };
   }
-};
+}
+
+// TS models and types:
+type PromiseType<T> = T extends Promise<infer U> ? U : T;
+
+export type LoadReturnType = PromiseType<ReturnType<typeof load>>;
+
+export interface Todo {
+  id: number;
+  message: string;
+  completed: boolean;
+}
 ```
 
-We can now fetch the data from the DB anywhere in the app by using the fetch function
-
-```typescript
-import { onMount } from 'svelte';
-
-let data: string;
-
-onMount(async () => {
-  const resp = await fetch('/api/todo');
-  console.log(resp);
-  data = await resp.json();
-});
-```
-
-Data can now be used in the template by simply writing {data}
+If we now navigate to "http://localhost:5000/todo" we should see the data from the database displayed in the browser.
+If you encountered problems, do not hesitate to ask for help or checkout the solution in the part4-solution-example branch.
 
 ### Documentation
 
@@ -123,7 +139,7 @@ To be able to reach the application, we must still expose port 5000 on the host.
 
 ### Problem: The FE cannot reach the DB
 
-Because it is configured/expecting to reach the DB at localhost, we must change configuration to reach the DB. We can find the IP of the DB container by running "podman inspect CONTAINERID/NAME" on the DB container. We can then use this IP to reach the DB from the FE. This is not a good solution as the IP of the DB container can change if the container is restarted.
+Because it is configured/expecting to reach the DB at localhost, we must change configuration to reach the DB. We can find the IP of the DB container by running "podman inspect CONTAINERID/NAME" on the DB container. We can use this IP to reach the DB from the FE. This is not a good solution as the IP of the DB container can change if the container is restarted.
 
 We can use either the container id or container name. I suggest container name as this is something we can control
 
@@ -133,6 +149,22 @@ podman run --network todo --name postgres -d postgres
 
 # Start the FE with host environment variable pointing to the DB container
 podman run --network todo --name svelte -d -p 5000:5000 -e HOST=postgres svelte
+```
+
+Take note of how we expose the name of the Postgres pod into the FE container using environment variable. This will make it easier to make changes later, as we do not have to change the source code. We can then make this change so the FE makes use of the environment variable. This applies to secrets as well!
+
+```typescript
+// We can also input the host as a variable from podman
+const host = process.env['HOST'];
+
+const db = pgp({
+  // host: "localhost",
+  host: host,
+  port: 5432,
+  database: 'todo',
+  user: 'postgres',
+  password: 'pass',
+});
 ```
 
 Fin; 🥳
@@ -157,10 +189,20 @@ Use "podman inspect CONTAINERID/NAME" to get detailed information on a running c
 
 # Future work
 
+### TODO app related
+
 - Keep creating the TODO app! Add the ability to add, delete and update todos, display the todos in a better fashion, etc..
-- Scale up! Run multiple instances of the application and put them behind a load balancer
 - Placeholder or loading screen while the app is loading from DB?
 - Error handling?
+
+### Docker/Podman related
+
+- Create a specific Dockerfile (e.g. Dockerfile.dev) with hot reload for local development
+- Multi stage builds to lower the size of the images!
+- Create a Docker Compose file to start up both the DB and the application with one command, including a network!
+- Health checks to automatically restart the container if it does not respond/crashes
+  - Example: https://docs.docker.com/engine/reference/builder/#healthcheck
+- Scale up! Run multiple instances of the application and put them behind a load balancer
 - Add type safety between the front-end and the back-end?
 - Add a volume to the DB container to persist data
 - Add a volume to the FE container to persist data
