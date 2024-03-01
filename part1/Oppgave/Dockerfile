@@ -1,6 +1,6 @@
 FROM python:3-alpine
 RUN python -m pip install --upgrade pip
-RUN pip install flask==2.1.*
+RUN pip install flask
 
 # install app
 COPY hello.py /
