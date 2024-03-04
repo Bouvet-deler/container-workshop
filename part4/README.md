@@ -194,6 +194,7 @@ Use "podman inspect CONTAINERID/NAME" to get detailed information on a running c
 - Keep creating the TODO app! Add the ability to add, delete and update todos, display the todos in a better fashion, etc..
 - Placeholder or loading screen while the app is loading from DB?
 - Error handling?
+- Add type safety between the front-end and the back-end?
 
 ### Docker/Podman related
 
@@ -203,6 +204,5 @@ Use "podman inspect CONTAINERID/NAME" to get detailed information on a running c
 - Health checks to automatically restart the container if it does not respond/crashes
   - Example: https://docs.docker.com/engine/reference/builder/#healthcheck
 - Scale up! Run multiple instances of the application and put them behind a load balancer
-- Add type safety between the front-end and the back-end?
 - Add a volume to the DB container to persist data
 - Add a volume to the FE container to persist data
