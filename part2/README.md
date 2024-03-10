@@ -1,11 +1,5 @@
 # Part 2
 
-## Installer podman
-
-`Podman machine init`
-
-`Podman machine start`
-
 ## Bygg image
 
 `cd part2\dotnet-docker`
