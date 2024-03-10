@@ -2,7 +2,7 @@
 
 Start med å innstallere podman på maskinen din om du ikke har det fra før. Gå til 'https://podman.io/' for å laste ned og innstallere.
 
-![Alt text](http://github.com/Bouvet-deler/container-workshop/part1/podman.jpg?raw=true "Title")
+![Podman.IO Website](https://github.com/Bouvet-deler/container-workshop/tree/main/part1/podman.jpg?raw=true "Title")
 
 Etter instllasjon må du kjøre følgende kommandoer i powershell e.l.
 
