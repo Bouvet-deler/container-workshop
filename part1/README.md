@@ -52,11 +52,21 @@ exit
 Bringer deg ut av container som avslutter og du mister all data.
 
 
+## IoT Utvikling for ARM prosessor baserte prosjekter i en container.
 
+La oss si at du ønsker å utvikle programvare for en mikrokontroller, mobil telefon e.l. som benytter seg av en annen prosessor type en utvikler maskinen din. Arm i stedet for Intel/AMD. Da kan man lage en container som har kryss kompilerings programmer som ikke er avhengig eller påvirker din egen maskin. La oss bygge en slik og lage et enkelt hello program for arm prosessorer.
 
+podman build -t stenbror/iot .  
 
+Dette tar litt tid, da det lastes ned kryss kompilatorer for kryss kompilering og vi setter opp et Ubuntu system for dette.
 
+ podman run -it stenbror/iot  
 
+ Da er vi inne i containeren og i katalogen for prosjektet vi ønsker å bygge.
+
+ ./build.sh  
+
+ Lager et program som kan kjøres på en arm basert maskin. Prøv å kjør den her og du ser den ikke er av Intel/AMD typen og lar seg ikke kjøre, men på en arm basert maskin vil den fungere. Eks. Raspberry Pi e.l.
 
 
 ## Presentasjonen er tilgjengelig.
