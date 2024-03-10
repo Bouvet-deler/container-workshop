@@ -1,6 +1,0 @@
-# Bygge kryss kompilerings miljø for STM32 mikro kontrollere 
-podman build -t stenbror/gcc-arm .
-
-# Kjøre byggemiljøet for STM32
-podman run --rm -it --privileged -v "$(PWD):/home/app" stenbror/gcc-arm:latest bash
-

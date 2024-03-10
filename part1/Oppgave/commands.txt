@@ -1,5 +1,0 @@
-# Bygge konteiner image
-podman build . --tag hello_bouvet
-
-# Kjøre opp en konteinet basert på image bygget over.
-podman run --rm -p 127.0.0.1:8000:8000 hello_bouvet
