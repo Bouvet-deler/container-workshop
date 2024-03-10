@@ -23,6 +23,15 @@ podman info
 
 Bytt ut 'hello_bouvet' med hva du ønsker å kalle container image du lager.
 
+Test containeren ved å åpne nettleser og gå til 'http://127.0.0.1:8000/' for å se en liten beskjed.  CTRL + C for å avslutte container. Bruk ikke localhost i stedet for 127.0.0.1, du kan jo prøve for å se resultatet.
+
+## Neste Oppgave er en enkel dotnet build.
+
+
+## Tredje Oppgave er et eksempel på utvikling for IoT / Mobil e.l.
+
+
+
 
 
 
