@@ -2,14 +2,18 @@
 
 Start med å innstallere podman på maskinen din om du ikke har det fra før. Gå til 'https://podman.io/' for å laste ned og innstallere.
 
+![Alt text](podman.jpg?raw=true "Title")
+
 Etter instllasjon må du kjøre følgende kommandoer i powershell e.l.
 
-podman machine init
-podman machine start
+podman machine init  
+podman machine start  
 
 For å sjekke at alt er på plass og virker, kan du prøve:
 
-podman info
+podman info  
+
+
 
 
 
