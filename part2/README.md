@@ -8,7 +8,7 @@
 
 ## Bygg image
 
-`cd part2`
+`cd part2\dotnet-docker`
 
 Se på Dockerfile
 
