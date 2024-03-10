@@ -15,7 +15,7 @@ podman info
 
 ## Enkel oppgave å starte docker/podman reisen med. Python med Flask i container.
 
- cd Oppgave  
+ cd PythonMedFlask  
 
  podman build . --tag hello_bouvet  
 
