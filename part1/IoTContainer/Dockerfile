@@ -7,7 +7,9 @@ RUN apt-get update && \
         apt-get install -y \
             build-essential \
             wget \
-            curl
+            curl \
+            git \
+            cmake 
 
 
 WORKDIR /home/dev
@@ -19,6 +21,8 @@ ENV PATH $PATH:/home/dev/gcc-arm-none-eabi-10.3-2021.10/bin
 
 WORKDIR /home/app
 
-COPY . .
+RUN git clone https://github.com/AFontaine79/stm-blinky.git
+
+WORKDIR /home/app/stm-blinky
 
 CMD ["bash"]
