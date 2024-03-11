@@ -34,7 +34,7 @@ Hvis man f.eks ønsker en separat container for utvikling av programvare i Rust 
 
 `podman build . --tag rusty_dev`
 
-`podman run -it rusty_dev`
+`podman run -it --rm rusty_dev`
 
 Da er man inne i containeren. Sjekke ved å se på hash value i kommando linjen og kjør 'pwd' for å se hvilken path du er i inne i containeren.
 
@@ -46,7 +46,7 @@ Da er man inne i containeren. Sjekke ved å se på hash value i kommando linjen 
 
 `cargo run`
 
-Da ser du programmet i Rust bygget og kjørt inne i containeren. Merk at du mister alt inne i containeren om du ikke bruker volume for percistant storage. Man kan jo pushe til git e.l. i stedet om det er ønskelig og alltid starte med et rent utvikler miljø hver gang man starter containeren.
+Da ser du programmet i Rust bygget og kjørt inne i containeren. Med `-rm` flagget mister man alt inne i containeren om du ikke bruker volume for persistant storage. Man kan jo pushe til git e.l. i stedet om det er ønskelig og alltid starte med et rent utvikler miljø hver gang man starter containeren.
 
 `exit`
 
