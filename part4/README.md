@@ -47,7 +47,7 @@ Now that the front- and back-end are up and running, we need to work on making t
 
 First we will complete the Svelte application by adding a way to fetch data from the database. The suggested approach is to run the front end application locally, with an PostgreSQL instance running in a container. We will take advantage of SvelteKit's server-side rendering to fetch data from the database and display it in the front end.
 
-First we will create a new route where we can display our todos. Create a new file called /routes/todo/+page.svelte and add the following code:
+First we will create a new route where we can display our todos. Create a new file called `/routes/todo/+page.svelte` and add the following code:
 
 ```html
 <script lang="ts">
@@ -62,7 +62,7 @@ First we will create a new route where we can display our todos. Create a new fi
 <pre>{JSON.stringify(data, null, 2)}</pre>
 ```
 
-We will also create a new file /routes/todo/+page.server.ts
+We will also create a new file `/routes/todo/+page.server.ts`
 
 ```typescript
 import pgPromise from 'pg-promise';
@@ -139,7 +139,7 @@ To be able to reach the application, we must still expose port 5000 on the host.
 
 ### Problem: The FE cannot reach the DB
 
-Because it is configured/expecting to reach the DB at localhost, we must change configuration to reach the DB. We can find the IP of the DB container by running "podman inspect CONTAINERID/NAME" on the DB container. We can use this IP to reach the DB from the FE. This is not a good solution as the IP of the DB container can change if the container is restarted.
+Because it is configured/expecting to reach the DB at localhost, we must change configuration to reach the DB. We can find the IP of the DB container by running `podman inspect CONTAINERID/NAME` on the DB container. We can use this IP to reach the DB from the FE. This is not a good solution as the IP of the DB container can change if the container is restarted.
 
 We can use either the container id or container name. I suggest container name as this is something we can control
 
