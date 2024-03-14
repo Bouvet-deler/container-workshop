@@ -25,9 +25,15 @@ Bygg Postgres image med tag: todo
 
 ### Opprett shell aksess
 
-Kunne her brukt `podman run` for å starte image'et også `podman exec -it` for å få shell aksess, men vi kan også gjøre dette i samme kommando.
+`podman run -d -p 5432:5432 todo`
 
-`podman run -it -e POSTGRES_PASSWORD=pass postgres /bin/bash`
+Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
+
+`podman ps`
+
+Få shell access i en kjørende container
+
+`podman exec -it <navn/hash> /bin/bash`
 
 ### Utfør SQL kommandoer
 
