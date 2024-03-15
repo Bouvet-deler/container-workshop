@@ -21,11 +21,11 @@ Bytt til mappa med Dockerfile'en i
 
 Bygg Postgres image med tag: todo
 
-`podman build -t todo .`
+`podman build -t tododb .`
 
 ### Opprett shell aksess
 
-`podman run -d -p 5432:5432 todo`
+`podman run -d --rm -p 5432:5432 --name database tododb`
 
 Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
 
@@ -33,7 +33,11 @@ Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra 
 
 Få shell access i en kjørende container
 
-`podman exec -it <navn/hash> /bin/bash`
+`podman exec -it database /bin/bash`
+
+`podman exec -it <container> <kommando-som-skal-kjøres>`
+
+!NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
 
 ### Utfør SQL kommandoer
 
@@ -44,17 +48,3 @@ Logg på databasen med psql, et management verktøy som følger med Postgres.
 Kjør SQL spørringer, f.eks.
 
 `select * from todo;`
-
-## Nyttige kommandoer
-
-`podman run -d -p 5432:5432 todo`
-
-Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
-
-`podman ps`
-
-Få shell access i en kjørende container
-
-`podman exec -it <navn/hash> /bin/bash`
-
-!NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
