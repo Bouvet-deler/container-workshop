@@ -1,53 +1,50 @@
 # Part 4
 
-## 4.1 Building the FE application
+I denne seksjonen skal vi spinne opp en Svelte-applikasjon og en database i hver sin container og få dem til å snakke sammen over et nettverk.
 
-Make sure you are in the right directory /part4/svelte-frontend. See the Dockerfile for the build instructions.
+## 4.1 Bygge applikasjonen
 
-```bash
-podman build . -t nameOfImage:latest
-```
+Naviger til  mappen med programmet: `cd part4/dotnet-docker`. Se [Dockerfil](./svelte-frontend/Dockerfile) for bygginstruksjoner.
 
--t : tag the image with a name and a tag
-
-. : the path to the Dockerfile (we assume your current working directory is the root of the project (svelte-frontend/.))
-
-nameOfImage:latest : the name and tag of the image (latest is the default tag if not specified) (run 'podman images' to see the list of images on your system)
-"svelte" is recommended to keep track
-
-Take note of .dockerignore in the svelte-frontend directory. This file is used to exclude files and directories from the build context. This is useful to avoid sending unnecessary files to the build context and thus speeding up the build process.
-
-## 4.2 Running the FE application
+Bestem deg for en tag å bruke på applikasjonen, for eksempel `svelte`.
 
 ```bash
-podman run -d -p 5000:5000 nameOfImage:latest
+podman build . -t <tagname>:latest
 ```
 
--d : run the container in the background (detached mode)
+`.` er filstien til dockerfilen. Her antar vi at du kjører kommandoen fra roten av prosjektet (`svelte-frontend/.`).
 
--p : map the port 5000 of the container to the port 5000 of the host
+Observer [`.dockerignore`](./svelte-frontend/.dockerignore)-filen i `svelte-frontend`-mappen. Denne filen brukes for å ekskludere filer og mapper fra bygg-konteksten. Ved å unngå å sende unødvendige filer til bygg-konteksten får vi en raskere bygg-prosess.
 
-As we have set up the host to be exposed in package.json, we can now access the app at http://localhost:5000
-
-## 4.3 Building the BE application
-
-See part 3
-
-## 4.4 Running the BE application
+## 4.2 Kjøre applikasjonen
 
 ```bash
-podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 todo
+podman run -d -p 5000:5000 <tagname>:latest
 ```
 
-## 4.5 Configuring the Front-End to use the Back-end
+`-p` flagget mapper port 5000 på containeren til port 5000 for hosten.
 
-We recommend using "npm run dev" (requires having ran "npm install" first) command to start the application in development mode. This will start a development server that will automatically reload the application when changes are made. This will make it easier to test and debug our changes.
+Hosten er definert til å eksponeres i `package.json`, så nå kan vi nå den på http://localhost:5000.
 
-Now that the front- and back-end are up and running, we need to work on making them communicate.
+## 4.3 Bygge databasen
 
-First we will complete the Svelte application by adding a way to fetch data from the database. The suggested approach is to run the front end application locally, with an PostgreSQL instance running in a container. We will take advantage of SvelteKit's server-side rendering to fetch data from the database and display it in the front end.
+Se [del 3](../part3/README.md#bygg-databasen). Foreslått tag: `svelte-db`.
 
-First we will create a new route where we can display our todos. Create a new file called `/routes/todo/+page.svelte` and add the following code:
+## 4.4 Kjøre databasen
+
+```bash
+podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 <tagname>
+```
+
+## 4.5 Konfigurere applikasjonen til å bruke databasen
+
+Vi annbefaler å kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene.
+
+Nå som både programmet og databasen kjører skal vi få dem til å kommunisere.
+
+Først må vi fullføre programmet ved å legge til en måte å hente data fra databasen. Den anbefalte metoden er å kjøre programmet lokalt med en PostgreSQL-instans kjørende i en container. Vi utnytter SvelteKit's server-side rendering til å hente data fra databasen og vise det på nettsiden.
+
+Først må vi opprette en ny rute hvor vi kan vise todo'ene våre. Lag en ny fil kalt `/routes/todo/+page.svelte` og legg til følgende kode:
 
 ```html
 <script lang="ts">
@@ -62,7 +59,7 @@ First we will create a new route where we can display our todos. Create a new fi
 <pre>{JSON.stringify(data, null, 2)}</pre>
 ```
 
-We will also create a new file `/routes/todo/+page.server.ts`
+Legg til en annen fil `/routes/todo/+page.server.ts`:
 
 ```typescript
 import pgPromise from 'pg-promise';
@@ -102,63 +99,64 @@ export interface Todo {
 }
 ```
 
-If we now navigate to "http://localhost:5000/todo" we should see the data from the database displayed in the browser.
-If you encountered problems, do not hesitate to ask for help or checkout the solution in the part4-solution-example branch.
+Etter endringene må du bygge containeren med programmet på nytt.
 
-### Documentation
+Nå kan vi gå til http://localhost:5000/todo og se at siden _prøver_ å hente data fra databasen. Vi skal hjelpe den.
+
+Hvis du har problemer med å få den til å kjøre er det bare å spørre om hjelp eller se løsningsforslaget på `part4-solution-example`-branchen.
+
+### Dokumentasjon
 
 SvelteKit routing (+server) https://kit.svelte.dev/docs/routing#server
 
 SvelteKit server side modules: https://kit.svelte.dev/docs/server-only-modules
 
-## 4.6 Creating a network for the DB and application to communicate
+## 4.6 Lage et nettverk mellom containerne
 
 ```bash
-podman network create todo
+podman network create todonet
 ```
 
-This will create a network called todo
+Dette vil opprette et nettverk kalt `todonet`.
 
-### Running the DB and the application in the same network
+### Kjøre containerne på samme nett
 
-The DB:
+Vi starter med å spinne opp databbasen:
 
 ```bash
-podman run -d --network todo postgres
+podman run -d --network todonet <tagname til db>
 ```
 
-Note the absence of the -p flag. We do not need to expose the port of the container to the host as the FE will be communicating with the BE through a network.
+Observer at vi ikke bruker `-p`-flagget. Vi trenger ikke eksponere porten til containeren videre til verten ettersom programmet vil kommunisere med databasen over nettverket vi har laget.
 
-And now join the rest of the application on the same network (remember to build the image if you have done changes since last build!):
+Så spinner vi opp resten av programmet:
 
 ```bash
-podman run -d --network todo -p 5000:5000 nameOfImage:latest
+podman run -d --network todonet -p 5000:5000 <tagname til app>:latest
 ```
 
-To be able to reach the application, we must still expose port 5000 on the host.
+Her må vi bruke `-p`-flagget for å eksponere port 5000 til verten slik at vi kan nå programmet fra nettleseren.
 
 ### Problem: The FE cannot reach the DB
 
-Because it is configured/expecting to reach the DB at localhost, we must change configuration to reach the DB. We can find the IP of the DB container by running `podman inspect CONTAINERID/NAME` on the DB container. We can use this IP to reach the DB from the FE. This is not a good solution as the IP of the DB container can change if the container is restarted.
+Fordi front enden er konfigurert til å nå databasen på `localhost` må vi endre konfigurasjonen. Vi kan finne IP-adressen til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne IP-adressen da den kan endres når containeren restarter.
 
-We can use either the container id or container name. I suggest container name as this is something we can control
+Vi kan bruke navnet eller ID'en til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv.
 
 ```bash
 # Start the DB container with a specific name
-podman run --network todo --name postgres -d postgres
+podman run --network todonet --name <navn til db container> -d <tagname til db>
 
 # Start the FE with host environment variable pointing to the DB container
-podman run --network todo --name svelte -d -p 5000:5000 -e HOST=postgres svelte
+podman run --network todonet --name <navn til app container> -d -p 5000:5000 -e HOST=<navn til db container> <tagname til app>
 ```
 
-Take note of how we expose the name of the Postgres pod into the FE container using environment variable. This will make it easier to make changes later, as we do not have to change the source code. We can then make this change so the FE makes use of the environment variable. This applies to secrets as well!
+Observer hvordan vi eksponerer navnet til databasecontaineren til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen:
 
 ```typescript
-// We can also input the host as a variable from podman
 const host = process.env['HOST'];
 
 const db = pgp({
-  // host: "localhost",
   host: host,
   port: 5432,
   database: 'todo',
@@ -166,6 +164,7 @@ const db = pgp({
   password: 'pass',
 });
 ```
+
 
 Fin; 🥳
 
