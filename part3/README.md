@@ -8,43 +8,47 @@ For å bygge Postgres bruker vi en enkel Dockerfile. Den henter det offisielle P
 
 Init skriptet lager en enkel tabell for å lagre todos og setter inn én rad.
 
+
 ## Oppgave
 
-1. Bygg en Postgres container 
-2. Opprett shell aksess 
-3. Utfør noen SQL kommandoer mot databasen
+1. [Bygg en Postgres container](#bygg-databasen)
+2. [Opprett shell aksess](#opprett-shell-aksess)
+3. [Test SQL kommandoer](#test-sql-kommandoer)
 
 ### Bygg databasen
-Bytt til mappa med Dockerfile'en i
 
-`cd part3`
+Bestem hva du skal tagge database-containeren med (feks `db`). Dette bruker du istedenfor `<tagname>` i kommandoene under.
 
-Bygg Postgres image med tag: todo
-
-`podman build -t tododb .`
+1. Bytt til mappen med Dockerfile'en  er i: `cd part3`
+2. `podman build -t <tagname> .`
 
 ### Opprett shell aksess
 
-`podman run -d --rm -p 5432:5432 --name database tododb`
+Når man kjører opp en container kan man gi den et navn med `--name` flagget. Alternativt kan man bruke hashen som returneres fra `podman run` eller finne det auto-genererte navnet med `podman ps`.
 
-Gi containeren et navn med --name flagget, eller bruk hashen som returneres fra podman run, eller finn det auto-genererte navnet med:
+1. Spinn opp containeren:<br/>`podman run -d --rm -p 5432:5432 <tagname>` / `podman run -d --rm -p 5432:5432 --name <name> <tagname>`
 
-`podman ps`
+`-d` flagget spinner opp containeren i _detached_ tilstand. Det vil si at du den kjører i bakdrunnen mens du returneres til terminalen.
 
-Få shell access i en kjørende container
-
-`podman exec -it database /bin/bash`
-
-`podman exec -it <container> <kommando-som-skal-kjøres>`
+2. Få shell access i en kjørende container<br/>`podman exec -it <navn/hash> /bin/bash`
 
 !NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
 
-### Utfør SQL kommandoer
+### Test SQL kommandoer
 
-Logg på databasen med psql, et management verktøy som følger med Postgres.
+1. Logg på databasen med psql, et management verktøy som følger med Postgres.<br/>`psql -U postgres -d todo`
 
-`psql -U postgres -d todo`
+2. Kjør SQL spørringer, f.eks. `select * from todo;`
 
-Kjør SQL spørringer, f.eks.
+**OBS:** Semikolonet må bli med for å avslutte kommandoen i terminalen.
 
-`select * from todo;`
+3. Avslutt `psql` med `exit` og gå ut av containeren med `exit` en gang til.
+
+## Nyttige kommandoer
+
+| Kommando | Forklaring |
+| --- | --- |
+| `podman ps` | List kjørende containere |
+| `podman ps -a` | List alle containere |
+| `podman exec -it <navn/hash> /bin/bash` | Få shell access i en kjørende container<br/>**NB!** bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke `/bin/bash` |
+
