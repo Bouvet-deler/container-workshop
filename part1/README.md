@@ -24,7 +24,9 @@ For å sjekke at alt er på plass og virker, kan du prøve:
 
 Bytt ut 'hello_bouvet' med hva du ønsker å kalle container image du lager.
 
-Test containeren ved å åpne nettleser og gå til 'http://127.0.0.1:8000/' for å se en liten beskjed.  `Ctrl` + `c` for å avslutte container. Bruk ikke localhost i stedet for 127.0.0.1, du kan jo prøve for å se resultatet.
+Test containeren ved å åpne nettleser og gå til 'http://127.0.0.1:8000/' for å se en liten beskjed. 
+
+`Ctrl + C` (Windows)/`Cmd + C` (Mac) for å avslutte container. Bruk ikke localhost i stedet for 127.0.0.1, du kan jo prøve for å se resultatet.
 
 ## En enkelt utvikler container for Rust utvikling.
 
