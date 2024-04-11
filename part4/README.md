@@ -103,9 +103,9 @@ export interface Todo {
 }
 ```
 
-Etter endringene må du bygge containeren med programmet på nytt.
+Etter endringene må du bygge containeren med programmet på nytt med `podman build`-kommandoen fra tidligere.
 
-Nå kan vi gå til http://localhost:5000/todo og se at siden _prøver_ å hente data fra databasen. Vi skal hjelpe den.
+Nå kan vi gå til [http://localhost:5000/todo](http://localhost:5000/todo) og se at siden _prøver_ å hente data fra databasen. Vi skal hjelpe den.
 
 Hvis du har problemer med å få den til å kjøre er det bare å spørre om hjelp eller se løsningsforslaget på `part4-solution-example`-branchen.
 
@@ -141,11 +141,24 @@ podman run -d --network todonet -p 5000:5000 <tagname til app>:latest
 
 Her må vi bruke `-p`-flagget for å eksponere port 5000 til verten slik at vi kan nå programmet fra nettleseren.
 
-### Problem: The FE cannot reach the DB
+Når du åpner [http://localhost:5000/todo](http://localhost:5000/todo) nå vil du se at programmet **ikke** klarer å nå databasen. Det er fordi programmet er konfigurert til å nå databasen på `localhost`, så vi må endre konfigurasjonen. Vi kan finne IP-adressen til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne IP-adressen da den kan endres når containeren restarter. Vi kan bruke navnet eller ID'en til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv. 
 
-Fordi front enden er konfigurert til å nå databasen på `localhost` må vi endre konfigurasjonen. Vi kan finne IP-adressen til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne IP-adressen da den kan endres når containeren restarter.
+Navnet til databasecontaineren kan eksponeres til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen (kopier inn i `/routes/todo/+page.server.ts`):
 
-Vi kan bruke navnet eller ID'en til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv.
+```typescript
+const host = process.env['HOST'];
+
+const db = pgp({
+  host: host, //'localhost'
+  port: 5432,
+  database: 'todo',
+  user: 'postgres',
+  password: 'pass',
+});
+```
+
+Bygg programmet på nytt og start opp containerne.
+
 
 ```bash
 # Start the DB container with a specific name
@@ -155,19 +168,6 @@ podman run --network todonet --name <navn til db container> -d <tagname til db>
 podman run --network todonet --name <navn til app container> -d -p 5000:5000 -e HOST=<navn til db container> <tagname til app>
 ```
 
-Observer hvordan vi eksponerer navnet til databasecontaineren til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen (kopier inn i `/routes/todo/+page.server.ts`):
-
-```typescript
-const host = process.env['HOST'];
-
-const db = pgp({
-  host: host,
-  port: 5432,
-  database: 'todo',
-  user: 'postgres',
-  password: 'pass',
-});
-```
 
 Fin; 🥳
 
