@@ -28,7 +28,7 @@ Hosten er definert til å eksponeres i `package.json`, så nå kan vi nå den p�
 
 ## 4.3 Bygge databasen
 
-Se [del 3](../part3/README.md#bygg-databasen). Foreslått tag: `svelte-db`.
+Se [del 3](../part3/README.md#bygg-databasen). Foreslått tag: `db` or `pg-db`.
 
 ## 4.4 Kjøre databasen
 
@@ -137,11 +137,11 @@ podman run -d --network todonet -p 5000:5000 <tagname til app>:latest
 
 Her må vi bruke `-p`-flagget for å eksponere port 5000 til verten slik at vi kan nå programmet fra nettleseren.
 
-### Problem: The FE cannot reach the DB
+### Problem: Svelte-applikasjonen klarer ikke å nå databasen
 
-Fordi front enden er konfigurert til å nå databasen på `localhost` må vi endre konfigurasjonen. Vi kan finne IP-adressen til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne IP-adressen da den kan endres når containeren restarter.
+Fordi front-enden er konfigurert til å nå databasen på `localhost` må vi endre konfigurasjonen. Vi kan finne IP-adressen eller ID til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne disse verdiene da de kan endres når containeren restarter.
 
-Vi kan bruke navnet eller ID'en til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv.
+Vi kan heller bruke navnet til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv.
 
 ```bash
 # Start the DB container with a specific name
