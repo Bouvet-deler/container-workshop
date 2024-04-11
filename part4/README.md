@@ -30,7 +30,7 @@ Hosten er definert til å eksponeres i `package.json`, så nå kan vi nå den p�
 
 ## 4.3 Bygge databasen
 
-Se [del 3](../part3/README.md#bygg-databasen). Foreslått tag: `svelte-db`.
+Dette har du allerede gjort i [del 3](../part3/README.md#bygg-databasen). Du kan bruke den samme.
 
 ## 4.4 Kjøre databasen
 
