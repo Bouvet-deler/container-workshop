@@ -40,7 +40,9 @@ podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 <tagname>
 
 ## 4.5 Konfigurere applikasjonen til å bruke databasen
 
-Vi annbefaler å kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene. *(Dette krever at npm er installert. Hvis du ikke vil installere Nodejs, går det helt fint å bare kjøre i en container, da den installerer Nodejs selv)*
+Du kan gjøre endringer på kildekoden til svelte-applikasjonen uten å kjøre programmet lokalt på egen maskin. Når du bygger applikasjonen med `podman build` tar den seg av avhengigheter på `npm` osv.
+
+Hvis du vil kjøre programmet lokalt må du kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene. *(Dette krever at npm er installert. Hvis du ikke vil installere Nodejs, går det helt fint å bare kjøre i en container, da den installerer Nodejs selv)*
 
 Nå som både programmet og databasen kjører skal vi få dem til å kommunisere.
 
