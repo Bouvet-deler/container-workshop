@@ -2,6 +2,8 @@
 
 I denne seksjonen skal vi spinne opp en Svelte-applikasjon og en database i hver sin container og få dem til å snakke sammen over et nettverk.
 
+*I [bunnen](#utilities) av denne Markdown filen finnes det noen nyttige kommandoer for å rydde opp når du er ferdig*
+
 ## 4.1 Bygge applikasjonen
 
 Naviger til  mappen med programmet: `cd part4/svelte-frontend`. Se [Dockerfil](./svelte-frontend/Dockerfile) for bygginstruksjoner.
@@ -38,7 +40,7 @@ podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 <tagname>
 
 ## 4.5 Konfigurere applikasjonen til å bruke databasen
 
-Vi annbefaler å kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene.
+Vi annbefaler å kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene. *(Dette krever at npm er installert. Hvis du ikke vil installere Nodejs, går det helt fint å bare kjøre i en container, da den installerer Nodejs selv)*
 
 Nå som både programmet og databasen kjører skal vi få dem til å kommunisere.
 
@@ -151,7 +153,7 @@ podman run --network todonet --name <navn til db container> -d <tagname til db>
 podman run --network todonet --name <navn til app container> -d -p 5000:5000 -e HOST=<navn til db container> <tagname til app>
 ```
 
-Observer hvordan vi eksponerer navnet til databasecontaineren til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen:
+Observer hvordan vi eksponerer navnet til databasecontaineren til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen (kopier inn i `/routes/todo/+page.server.ts`):
 
 ```typescript
 const host = process.env['HOST'];
@@ -164,7 +166,6 @@ const db = pgp({
   password: 'pass',
 });
 ```
-
 
 Fin; 🥳
 
