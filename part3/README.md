@@ -32,7 +32,7 @@ Når man kjører opp en container kan man gi den et navn med `--name` flagget. A
 
 2. Få shell access i en kjørende container<br/>`podman exec -it <navn/hash> /bin/bash`
 
-!NB bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke /bin/ash
+NB! `bash` er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke `/bin/ash`.
 
 ### Test SQL kommandoer
 
@@ -50,5 +50,5 @@ Når man kjører opp en container kan man gi den et navn med `--name` flagget. A
 | --- | --- |
 | `podman ps` | List kjørende containere |
 | `podman ps -a` | List alle containere |
-| `podman exec -it <navn/hash> /bin/bash` | Få shell access i en kjørende container<br/>**NB!** bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke `/bin/bash` |
+| `podman exec -it <navn/hash> /bin/bash` | Få shell access i en kjørende container<br/>**NB!** bash er ikke alltid tilgjengelig i en container. Hvis man vil ha shell access i en container basert på Alpine Linux må man bruke `/bin/ash` |
 
