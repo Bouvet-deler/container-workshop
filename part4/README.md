@@ -125,7 +125,7 @@ Dette vil opprette et nettverk kalt `todonet`.
 
 ### Kjøre containerne på samme nett
 
-Vi starter med å spinne opp databbasen:
+Vi starter med å spinne opp databasen:
 
 ```bash
 podman run -d --network todonet <tagname til db>
@@ -157,7 +157,7 @@ const db = pgp({
 });
 ```
 
-Bygg programmet på nytt og start opp containerne.
+Bygg programmet på nytt og start opp containerne. Se at vi bruker `-e`-flagget for å sette miljøvariabelen.
 
 
 ```bash
