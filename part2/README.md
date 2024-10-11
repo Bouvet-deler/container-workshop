@@ -10,7 +10,7 @@ Se på [`Dockerfile`](./dotnet-docker/Dockerfile).
 
 Bestem hva du skal tagge containeren med (feks `part2`). Dette bruker du istedenfor `<tagname>` i kommandoene under.
 
-1. Kjør følgende kommandoer:<br/>`podman build . -t=<tagname>`<br/>`podman images` (se på images)<br/>`podman run --rm -p 5000:8080 localhost/<tagname>`
+1. Kjør følgende kommandoer:<br/>`podman build . -t=<tagname>`<br/>`podman images` (se på images)<br/>`podman run --rm -p 5000:8080 <tagname>`
 2. Gå til http://localhost:5000/ for å se på fungerende nettside i container.
 3. `Ctrl`+`C` for å stanse containeren som kjører.
 
@@ -21,5 +21,5 @@ Bestem hva du skal tagge containeren med (feks `part2`). Dette bruker du isteden
 
 ```bash
 podman build . -t=<tagname>
-podman run --rm -p 5000:8080 localhost/<tagname>
+podman run --rm -p 5000:8080 <tagname>
 ```
