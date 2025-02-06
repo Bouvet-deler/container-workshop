@@ -1,0 +1,20 @@
+services:
+  database:
+    image: <db-image-tag>:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - todonet
+
+  frontend:
+    image: <frontend-image-tag>:latest
+    environment:
+      - HOST=database
+    ports:
+      - "5000:5000"
+    networks:
+      - todonet
+
+networks:
+  todonet:
+    driver: bridge

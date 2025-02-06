@@ -2,9 +2,11 @@
 
 I denne seksjonen skal vi spinne opp en Svelte-applikasjon og en database i hver sin container og få dem til å snakke sammen over et nettverk.
 
+*I [bunnen](#utilities) av denne Markdown filen finnes det noen nyttige kommandoer for å rydde opp når du er ferdig*
+
 ## 4.1 Bygge applikasjonen
 
-Naviger til  mappen med programmet: `cd part4/dotnet-docker`. Se [Dockerfil](./svelte-frontend/Dockerfile) for bygginstruksjoner.
+Naviger til  mappen med programmet: `cd part4/svelte-frontend`. Se [Dockerfil](./svelte-frontend/Dockerfile) for bygginstruksjoner.
 
 Bestem deg for en tag å bruke på applikasjonen, for eksempel `svelte`.
 
@@ -28,7 +30,7 @@ Hosten er definert til å eksponeres i `package.json`, så nå kan vi nå den p�
 
 ## 4.3 Bygge databasen
 
-Se [del 3](../part3/README.md#bygg-databasen). Foreslått tag: `db` or `pg-db`.
+Dette har du allerede gjort i [del 3](../part3/README.md#bygg-databasen). Du kan bruke den samme.
 
 ## 4.4 Kjøre databasen
 
@@ -38,7 +40,9 @@ podman run -d -e POSTGRES_PASSWORD=pass -p 5432:5432 <tagname>
 
 ## 4.5 Konfigurere applikasjonen til å bruke databasen
 
-Vi annbefaler å kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene.
+Du kan gjøre endringer på kildekoden til svelte-applikasjonen uten å kjøre programmet lokalt på egen maskin. Når du bygger applikasjonen med `podman build` tar den seg av avhengigheter på `npm` osv.
+
+Hvis du vil kjøre programmet lokalt må du kjøre `npm install` etterfulgt av `npm run dev`. Dette starter programmet i utviklingsmodus. Da får vi en utviklingsserver som automatisk laster programmet på nytt når det gjøres endringer. Dette vil gjøre det lettere å teste og debugge endringene. *(Dette krever at npm er installert. Hvis du ikke vil installere Nodejs, går det helt fint å bare kjøre i en container, da den installerer Nodejs selv)*
 
 Nå som både programmet og databasen kjører skal vi få dem til å kommunisere.
 
@@ -99,9 +103,9 @@ export interface Todo {
 }
 ```
 
-Etter endringene må du bygge containeren med programmet på nytt.
+Etter endringene må du bygge containeren med programmet på nytt med `podman build`-kommandoen fra tidligere.
 
-Nå kan vi gå til http://localhost:5000/todo og se at siden _prøver_ å hente data fra databasen. Vi skal hjelpe den.
+Nå kan vi gå til [http://localhost:5000/todo](http://localhost:5000/todo) og se at siden _prøver_ å hente data fra databasen. Vi skal hjelpe den.
 
 Hvis du har problemer med å få den til å kjøre er det bare å spørre om hjelp eller se løsningsforslaget på `part4-solution-example`-branchen.
 
@@ -121,7 +125,7 @@ Dette vil opprette et nettverk kalt `todonet`.
 
 ### Kjøre containerne på samme nett
 
-Vi starter med å spinne opp databbasen:
+Vi starter med å spinne opp databasen:
 
 ```bash
 podman run -d --network todonet <tagname til db>
@@ -137,11 +141,24 @@ podman run -d --network todonet -p 5000:5000 <tagname til app>:latest
 
 Her må vi bruke `-p`-flagget for å eksponere port 5000 til verten slik at vi kan nå programmet fra nettleseren.
 
-### Problem: Svelte-applikasjonen klarer ikke å nå databasen
+Når du åpner [http://localhost:5000/todo](http://localhost:5000/todo) nå vil du se at programmet **ikke** klarer å nå databasen. Det er fordi programmet er konfigurert til å nå databasen på `localhost`, så vi må endre konfigurasjonen. Vi kan finne IP-adressen til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne IP-adressen da den kan endres når containeren restarter. Vi kan bruke navnet eller ID'en til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv. 
 
-Fordi front-enden er konfigurert til å nå databasen på `localhost` må vi endre konfigurasjonen. Vi kan finne IP-adressen eller ID til databasecontaineren ved å kjøre `podman inspect <CONTAINERID/NAME>`. Det er imidlertid ikke smart å bruke denne disse verdiene da de kan endres når containeren restarter.
+Navnet til databasecontaineren kan eksponeres til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen (kopier inn i `/routes/todo/+page.server.ts`):
 
-Vi kan heller bruke navnet til containeren. Fordelen med å bruke navnet er at det er noe du kan styre selv.
+```typescript
+const host = process.env['HOST'];
+
+const db = pgp({
+  host: host, //'localhost'
+  port: 5432,
+  database: 'todo',
+  user: 'postgres',
+  password: 'pass',
+});
+```
+
+Bygg programmet på nytt og start opp containerne. Se at vi bruker `-e`-flagget for å sette miljøvariabelen.
+
 
 ```bash
 # Start the DB container with a specific name
@@ -149,20 +166,6 @@ podman run --network todonet --name <navn til db container> -d <tagname til db>
 
 # Start the FE with host environment variable pointing to the DB container
 podman run --network todonet --name <navn til app container> -d -p 5000:5000 -e HOST=<navn til db container> <tagname til app>
-```
-
-Observer hvordan vi eksponerer navnet til databasecontaineren til applikasjonscontaineren via en miljøvariabel. Dette vil gjøre det lettere å gjøre endringer senere, ettersom vi ikke må endre kildekoden. Før det fungerer må vi også endre applikasjonen til å bruke miljøvariabelen:
-
-```typescript
-const host = process.env['HOST'];
-
-const db = pgp({
-  host: host,
-  port: 5432,
-  database: 'todo',
-  user: 'postgres',
-  password: 'pass',
-});
 ```
 
 
